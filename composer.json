@@ -13,6 +13,7 @@
     },
     "require": {
         "php": ">= 8.0",
-        "nette/finder": "^2.5"
+        "nette/finder": "^2.5",
+        "nette/neon": "^3.2"
     }
 }

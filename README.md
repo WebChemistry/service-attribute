@@ -4,6 +4,7 @@
 <?php declare(strict_types = 1);
 
 use Doctrine\Common\EventSubscriber;
+use WebChemistry\ServiceAttribute\Generator\NeonFile;
 use WebChemistry\ServiceAttribute\Generator\ServiceNeonGenerator;
 use WebChemistry\ServiceAttribute\Group\ClassStartsWithGroup;
 use WebChemistry\ServiceAttribute\Group\DeprecatedGroup;
@@ -30,10 +31,18 @@ $services = ServiceFinder::findServices(__DIR__ . '/../app');
 // sorting
 $services = ServiceSorter::sort($services);
 
+
+$neon = new NeonFile($path = __DIR__ . '/generated/services.neon', $services);
+
+echo $neon->diff();
+echo sprintf("File generated from %d services: file://%s\n", count($services), $path);
+
+$neon->save();
+
 echo (new ServiceNeonGenerator($services))->generate();
 ```
 
 run:
 ```bash
-php services.php > app/generated/services.neon
+php services.php
 ```
