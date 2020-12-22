@@ -2,7 +2,9 @@
 
 namespace WebChemistry\ServiceAttribute\Entity;
 
-final class ServiceEntityCollection
+use Countable;
+
+final class ServiceEntityCollection implements Countable
 {
 
 	/**
@@ -14,6 +16,16 @@ final class ServiceEntityCollection
 		private array $groups = [],
 	)
 	{
+	}
+
+	public function count(): int
+	{
+		$count = count($this->entities);
+		foreach ($this->groups as $group) {
+			$count += count($group);
+		}
+
+		return $count;
 	}
 
 	public function addEntity(ServiceEntity $entity): void

@@ -2,7 +2,9 @@
 
 namespace WebChemistry\ServiceAttribute\Entity;
 
-class ServiceGroup implements ServiceEntityInterface
+use Countable;
+
+class ServiceGroup implements ServiceEntityInterface, Countable
 {
 
 	/**
@@ -13,6 +15,11 @@ class ServiceGroup implements ServiceEntityInterface
 		private array $entities = [],
 	)
 	{
+	}
+
+	public function count(): int
+	{
+		return count($this->getEntities());
 	}
 
 	public function generate(): string
