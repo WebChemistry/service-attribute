@@ -1,0 +1,47 @@
+<?php declare(strict_types = 1);
+
+namespace WebChemistry\ServiceAttribute;
+
+use PhpToken;
+
+final class TokenIterator
+{
+
+	private int $index = 0;
+
+	/**
+	 * @param PhpToken[] $tokens
+	 */
+	public function __construct(
+		private array $tokens
+	)
+	{
+	}
+
+	public function next(): ?PhpToken
+	{
+		return $this->tokens[$this->index++] ?? null;
+	}
+
+	public function hasNext(): bool
+	{
+		return isset($this->tokens[$this->index + 1]);
+	}
+
+	public function getPrevious(): ?PhpToken
+	{
+		return $this->tokens[$this->index - 2] ?? null;
+	}
+
+	public function nextUntil(?string $tokenName): ?PhpToken
+	{
+		while ($token = $this->next()) {
+			if ($token->getTokenName() === $tokenName) {
+				return $token;
+			}
+		}
+
+		return null;
+	}
+
+}

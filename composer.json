@@ -1,0 +1,17 @@
+{
+    "autoload": {
+        "psr-4": {
+            "WebChemistry\\ServiceAttribute\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "classmap": ["tests/files"]
+    },
+    "require-dev": {
+        "nette/tester": "^2.3"
+    },
+    "require": {
+        "php": ">= 8.0",
+        "nette/finder": "^2.5"
+    }
+}
