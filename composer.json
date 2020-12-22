@@ -1,4 +1,5 @@
 {
+    "name": "webchemistry/service-attribute",
     "autoload": {
         "psr-4": {
             "WebChemistry\\ServiceAttribute\\": "src"
