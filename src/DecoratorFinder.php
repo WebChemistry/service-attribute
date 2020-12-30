@@ -3,6 +3,7 @@
 namespace WebChemistry\ServiceAttribute;
 
 use ReflectionClass;
+use WebChemistry\ServiceAttribute\Attribute\Decorator;
 use WebChemistry\ServiceAttribute\Entity\DecoratorEntity;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;

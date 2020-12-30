@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace WebChemistry\ServiceAttribute;
+namespace WebChemistry\ServiceAttribute\Attribute;
 
 use Attribute;
 
