@@ -9,16 +9,23 @@ use PhpToken;
 final class ClassFinder
 {
 
+	/** @var mixed[] */
+	private static array $caching = [];
+
 	public static function findClasses(string $directory): iterable
 	{
-		foreach (Finder::findFiles('*.php')->from($directory) as $file) {
-			$class = self::findClassName((string) $file);
-			if ($class === null) {
-				continue;
-			}
+		if (!isset(self::$caching[$directory])) {
+			foreach (Finder::findFiles('*.php')->from($directory) as $file) {
+				$class = self::findClassName((string) $file);
+				if ($class === null) {
+					continue;
+				}
 
-			yield $class;
+				self::$caching[$directory][] = $class;
+			}
 		}
+
+		return self::$caching[$directory];
 	}
 
 	private static function findClassName(string $file): ?string
