@@ -2,6 +2,7 @@
 
 namespace WebChemistry\ServiceAttribute;
 
+use Nette\Utils\Finder;
 use ReflectionClass;
 use WebChemistry\ServiceAttribute\Attribute\Decorator;
 use WebChemistry\ServiceAttribute\Entity\DecoratorEntity;
@@ -14,7 +15,7 @@ final class DecoratorFinder
 	/**
 	 * @return DecoratorEntity[]
 	 */
-	public static function findDecorators(string $directory): array
+	public static function findDecorators(Finder $directory): array
 	{
 		$decorators = [];
 		foreach (ClassFinder::findClasses($directory) as $class) {

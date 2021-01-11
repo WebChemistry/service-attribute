@@ -14,7 +14,10 @@ use WebChemistry\ServiceAttribute\Sort\ServiceSorter;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$services = ServiceFinder::findServices(__DIR__ . '/../app');
+$directory = Finder::find('*.php')
+	->from(__DIR__ . '/app');
+
+$services = ServiceFinder::findServices($directory);
 
 // grouping
 (new DeprecatedGroup())

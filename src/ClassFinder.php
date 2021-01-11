@@ -5,24 +5,27 @@ namespace WebChemistry\ServiceAttribute;
 use LogicException;
 use Nette\Utils\Finder;
 use PhpToken;
+use WeakMap;
 
 final class ClassFinder
 {
 
-	/** @var mixed[] */
-	private static array $caching = [];
+	private static WeakMap $caching;
 
-	public static function findClasses(string $directory): iterable
+	public static function findClasses(Finder $directory): iterable
 	{
-		if (!isset(self::$caching[$directory])) {
-			foreach (Finder::findFiles('*.php')->from($directory) as $file) {
+		if (!isset(self::getCaching()[$directory])) {
+			$cache = [];
+			foreach ($directory as $file) {
 				$class = self::findClassName((string) $file);
 				if ($class === null) {
 					continue;
 				}
 
-				self::$caching[$directory][] = $class;
+				$cache[] = $class;
 			}
+
+			self::getCaching()[$directory] = $cache;
 		}
 
 		return self::$caching[$directory];
@@ -59,6 +62,15 @@ final class ClassFinder
 		}
 
 		return ($namespace ? $namespace . '\\' : '') . $name;
+	}
+
+	private static function getCaching(): WeakMap
+	{
+		if (!isset(self::$caching)) {
+			self::$caching = new WeakMap();
+		}
+
+		return self::$caching;
 	}
 
 }

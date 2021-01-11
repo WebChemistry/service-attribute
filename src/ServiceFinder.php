@@ -2,6 +2,7 @@
 
 namespace WebChemistry\ServiceAttribute;
 
+use Nette\Utils\Finder;
 use ReflectionClass;
 use WebChemistry\ServiceAttribute\Attribute\Service;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
@@ -10,7 +11,7 @@ use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
 class ServiceFinder
 {
 
-	public static function findServices(string $directory): ServiceEntityCollection
+	public static function findServices(Finder $directory): ServiceEntityCollection
 	{
 		$collection = new ServiceEntityCollection();
 		foreach (ClassFinder::findClasses($directory) as $class) {
