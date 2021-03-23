@@ -27,7 +27,7 @@ final class ServiceNeonGenerator
 
 		foreach ($this->collection->getGroups() as $group) {
 			$neon .= "\n\t";
-			$neon .= $group->generate();
+			$neon .= implode("\t", $group->generate());
 			$neon .= "\n";
 			foreach ($group->getEntities() as $service) {
 				$neon .= $this->generateService($service);
@@ -41,7 +41,7 @@ final class ServiceNeonGenerator
 	{
 		return
 			"\t" .
-			$service->generate() .
+			implode("\n\t", $service->generate()) .
 			"\n";
 	}
 

@@ -11,6 +11,7 @@ final class Service
 	public function __construct(
 		public ?string $name = null,
 		public ?string $args = null,
+		public ?array $tags = null,
 	)
 	{
 	}

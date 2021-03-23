@@ -27,6 +27,12 @@ final class NeonFile
 		foreach ($services as $service) {
 			if ($service instanceof Entity) {
 				$mapping[$service->value] = true;
+			} else if (is_array($service)) {
+				if (!isset($service['class'])) {
+					continue;
+				}
+
+				$mapping[$service['class']] = true;
 			} else {
 				$mapping[$service] = true;
 			}

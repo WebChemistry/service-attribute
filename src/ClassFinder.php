@@ -17,12 +17,12 @@ final class ClassFinder
 		if (!isset(self::getCaching()[$directory])) {
 			$cache = [];
 			foreach ($directory as $file) {
-				$class = self::findClassName((string) $file);
-				if ($class === null) {
+				$classes = self::findClassNames((string) $file);
+				if (!$classes) {
 					continue;
 				}
 
-				$cache[] = $class;
+				$cache = array_merge($cache, $classes);
 			}
 
 			self::getCaching()[$directory] = $cache;
@@ -31,37 +31,52 @@ final class ClassFinder
 		return self::$caching[$directory];
 	}
 
-	private static function findClassName(string $file): ?string
+	/**
+	 * @return string[]
+	 */
+	private static function findClassNames(string $file): array
 	{
 		if (($contents = file_get_contents($file)) === false) {
 			throw new LogicException(sprintf('Cannot get content from %s', $file));
 		}
 
+		$classes = [];
 		$tokens = new TokenIterator(PhpToken::tokenize($contents));
 		$namespace = null;
 		$name = null;
 		while ($token = $tokens->next()) {
+
 			if ($token->is(T_NAMESPACE)) {
-				$tokens->nextUntil(';');
+				$namespace = null;
 
-				$namespace = $tokens->getPrevious()?->text;
+				while ($token = $tokens->next()) {
+					if ($token->is([';', '{'])) {
+						break;
+					}
+
+					$namespace .= $token->text;
+				}
+
+				$namespace = trim($namespace);
 			}
 
-			if ($token->is(T_CLASS) || $token->is(T_INTERFACE)) {
-				$token = $tokens->nextUntil('T_STRING');
-				$name = $token?->text;
+			if ($token->is([T_CLASS, T_INTERFACE])) {
+				$space = $tokens->next();
 
-				break;
-			} elseif ($token->is(T_TRAIT)) {
-				break;
+				if ($space?->text !== ' ') {
+					continue;
+				}
+
+				$string = $tokens->next();
+				if ($string?->id !== T_STRING) {
+					continue;
+				}
+
+				$classes[] = ($namespace ? $namespace . '\\' : '') . $string->text;
 			}
 		}
 
-		if ($name === null) {
-			return null;
-		}
-
-		return ($namespace ? $namespace . '\\' : '') . $name;
+		return $classes;
 	}
 
 	private static function getCaching(): WeakMap

@@ -27,7 +27,8 @@ class ServiceFinder
 					$reflection,
 					$reflection->getName(),
 					$attributes[0]->getArguments()['name'] ?? null,
-					$attributes[0]->getArguments()['args'] ?? null
+					$attributes[0]->getArguments()['args'] ?? null,
+					$attributes[0]->getArguments()['tags'] ?? null,
 				)
 			);
 		}

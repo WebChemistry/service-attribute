@@ -22,9 +22,9 @@ class ServiceGroup implements ServiceEntityInterface, Countable
 		return count($this->getEntities());
 	}
 
-	public function generate(): string
+	public function generate(): array
 	{
-		return "# " . $this->comment;
+		return ["# " . $this->comment];
 	}
 
 	public function addEntity(ServiceEntity $entity): void

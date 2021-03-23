@@ -33,10 +33,10 @@ final class TokenIterator
 		return $this->tokens[$this->index - 2] ?? null;
 	}
 
-	public function nextUntil(?string $tokenName): ?PhpToken
+	public function nextUntil(string... $tokenNames): ?PhpToken
 	{
 		while ($token = $this->next()) {
-			if ($token->getTokenName() === $tokenName) {
+			if (in_array($token->getTokenName(), $tokenNames, true)) {
 				return $token;
 			}
 		}

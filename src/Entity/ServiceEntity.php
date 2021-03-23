@@ -2,6 +2,7 @@
 
 namespace WebChemistry\ServiceAttribute\Entity;
 
+use Nette\Neon\Neon;
 use ReflectionClass;
 
 final class ServiceEntity implements ServiceEntityInterface
@@ -12,13 +13,26 @@ final class ServiceEntity implements ServiceEntityInterface
 		public string $className,
 		public ?string $name,
 		public ?string $args,
+		public ?array $tags,
 	)
 	{
 	}
 
-	public function generate(): string
+	public function generate(): array
 	{
-		return $this->generateIndex() . $this->className . $this->generateArgs();
+		if (!$this->tags) {
+			return [$this->generateIndex() . $this->className . $this->generateArgs()];
+		}
+
+		$lines = [
+			$this->generateIndex(),
+		];
+
+		return $this->generateSections($lines, [
+			'class' => $this->className,
+			'arguments' => $this->args,
+			'tags' => $this->tags ? Neon::encode($this->tags) : null,
+		]);
 	}
 
 	private function generateIndex(): string
@@ -37,6 +51,19 @@ final class ServiceEntity implements ServiceEntityInterface
 		}
 
 		return '';
+	}
+
+	private function generateSections(array $base, array $sections): array
+	{
+		foreach ($sections as $name => $value) {
+			if (!$value) {
+				continue;
+			}
+
+			$base[] = sprintf("\t%s: %s", $name, $value);
+		}
+
+		return $base;
 	}
 
 }
