@@ -31,6 +31,8 @@ final class ServiceSorter
 	 */
 	private static function sortServices(array $services): array
 	{
+		$sorted = [];
+		
 		foreach ($services as $service) {
 			$sorted[$service->className] = $service;
 		}
