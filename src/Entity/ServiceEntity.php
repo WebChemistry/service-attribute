@@ -14,6 +14,7 @@ final class ServiceEntity implements ServiceEntityInterface
 		public ?string $name,
 		public ?string $args,
 		public ?array $tags,
+		public bool $ignore,
 	)
 	{
 	}

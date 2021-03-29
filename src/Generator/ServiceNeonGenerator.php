@@ -39,6 +39,14 @@ final class ServiceNeonGenerator
 
 	private function generateService(ServiceEntity $service): string
 	{
+		if ($service->ignore) {
+			return
+				"\t# ignored\n" .
+				"\t# " .
+				implode("\n\t# ", $service->generate()) .
+				"\n";
+		}
+
 		return
 			"\t" .
 			implode("\n\t", $service->generate()) .

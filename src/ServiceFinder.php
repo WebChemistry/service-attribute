@@ -4,6 +4,7 @@ namespace WebChemistry\ServiceAttribute;
 
 use Nette\Utils\Finder;
 use ReflectionClass;
+use WebChemistry\ServiceAttribute\Attribute\Ignore;
 use WebChemistry\ServiceAttribute\Attribute\Service;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
@@ -17,6 +18,7 @@ class ServiceFinder
 		foreach (ClassFinder::findClasses($directory) as $class) {
 			$reflection = new ReflectionClass($class);
 			$attributes = $reflection->getAttributes(Service::class);
+			$ignore = (bool) $reflection->getAttributes(Ignore::class);
 
 			if (!$attributes) {
 				continue;
@@ -29,6 +31,7 @@ class ServiceFinder
 					$attributes[0]->getArguments()['name'] ?? null,
 					$attributes[0]->getArguments()['args'] ?? null,
 					$attributes[0]->getArguments()['tags'] ?? null,
+					$ignore,
 				)
 			);
 		}
