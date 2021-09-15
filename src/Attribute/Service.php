@@ -10,8 +10,10 @@ final class Service
 
 	public function __construct(
 		public ?string $name = null,
-		public ?string $args = null,
+		public ?array $args = null,
 		public ?array $tags = null,
+		public string|bool|null $serviceFromMethod = null,
+		public int $priority = 0,
 	)
 	{
 	}

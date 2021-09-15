@@ -40,6 +40,12 @@ final class ClassFinder
 			throw new LogicException(sprintf('Cannot get content from %s', $file));
 		}
 
+		if (strlen($contents) > 50000) {
+			echo sprintf("File %s is too big, skipped.\n", $file);
+
+			return [];
+		}
+
 		$classes = [];
 		$tokens = new TokenIterator(PhpToken::tokenize($contents));
 		$namespace = null;

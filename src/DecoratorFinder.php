@@ -26,11 +26,11 @@ final class DecoratorFinder
 				continue;
 			}
 
-			$args = $attributes[0]->getArguments();
+			/** @var Decorator $attribute */
+			$attribute = $attributes[0]->newInstance();
 			$decorators[$class] = new DecoratorEntity(
 				$reflection,
-				$class,
-				$args['setup'] ?? $args[0] ?? []
+				$attribute,
 			);
 		}
 

@@ -3,9 +3,11 @@
 namespace WebChemistry\ServiceAttribute\Generator;
 
 use _HumbugBox39a196d4601e\Nette\Neon\Exception;
+use Nette\Neon\Neon;
 use WebChemistry\ServiceAttribute\Entity\DecoratorEntity;
+use WebChemistry\ServiceAttribute\Neon\NeonPrettyEncoder;
 
-class DecoratorNeonGenerator
+final class DecoratorNeonGenerator
 {
 
 	/**
@@ -19,21 +21,12 @@ class DecoratorNeonGenerator
 
 	public function generate(): string
 	{
-		$neon = "decorator:\n";
-
+		$decorators = [];
 		foreach ($this->decorators as $decorator) {
-			if (!$decorator->setup) {
-				throw new Exception(sprintf('Setup is missing for decorator %s', $decorator->className));
-			}
-
-			$neon .= sprintf("\t%s:\n", $decorator->className);
-			$neon .= "\t\tsetup:\n";
-			foreach ($decorator->setup as $setup) {
-				$neon .= sprintf("\t\t\t- %s\n", $setup);
-			}
+			$decorators = $decorator->toArray($decorators);
 		}
 
-		return $neon;
+		return NeonPrettyEncoder::encode(['decorator' => $decorators]);
 	}
 
 }

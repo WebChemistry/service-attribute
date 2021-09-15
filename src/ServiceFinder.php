@@ -24,13 +24,13 @@ class ServiceFinder
 				continue;
 			}
 
+			/** @var Service $attribute */
+			$attribute = $attributes[0]->newInstance();
+
 			$collection->addEntity(
 				new ServiceEntity(
 					$reflection,
-					$reflection->getName(),
-					$attributes[0]->getArguments()['name'] ?? null,
-					$attributes[0]->getArguments()['args'] ?? null,
-					$attributes[0]->getArguments()['tags'] ?? null,
+					$attribute,
 					$ignore,
 				)
 			);

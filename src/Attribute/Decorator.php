@@ -9,7 +9,8 @@ class Decorator
 {
 
 	public function __construct(
-		public array $setup = []
+		public array $setup = [],
+		public array $tags = [],
 	)
 	{
 	}

@@ -15,7 +15,7 @@ final class DecoratorValidator
 		foreach ($decorators as $decorator) {
 			$reflection = $decorator->reflection;
 
-			foreach ($decorator->setup as $method) {
+			foreach ($decorator->attribute->setup as $method) {
 				if (!$reflection->hasMethod($method)) {
 					echo sprintf("Warning: decorator %s have not method %s\n", $reflection->getName(), $method);
 					continue;

@@ -4,6 +4,7 @@ namespace WebChemistry\ServiceAttribute\Generator;
 
 use Nette\Neon\Entity;
 use Nette\Neon\Neon;
+use Nette\Utils\FileSystem;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
 
 final class NeonFile
@@ -11,68 +12,55 @@ final class NeonFile
 
 	public function __construct(
 		private string $file,
-		private ServiceEntityCollection $collection
+		private string $content,
 	)
 	{
 	}
 
-	public function diff(): string
+	public function diff(): void
 	{
 		if (!file_exists($this->file)) {
-			return "\e[34mNew file generated!\e[39m\n";
+			echo "\e[34mNew file generated!\e[39m\n";
+
+			return;
 		}
 
-		$services = Neon::decode(file_get_contents($this->file))['services'] ?? [];
-		$mapping = [];
-		foreach ($services as $service) {
-			if ($service instanceof Entity) {
-				$mapping[$service->value] = true;
-			} else if (is_array($service)) {
-				if (!isset($service['class'])) {
-					continue;
-				}
+		$res = exec(
+			sprintf(
+				'diff  <(echo \'%s\' ) <(echo \'%s\')',
+				file_get_contents($this->file),
+				$this->content,
+			),
+			$output,
+			$result
+		);
 
-				$mapping[$service['class']] = true;
-			} else {
-				$mapping[$service] = true;
-			}
+		if ($result === 0) {
+			echo "\e[34mNo changes!\e[39m\n";
+		} else {
+			echo implode("\n", array_map(
+					fn (string $line) => $this->decorateLine($line),
+					$output,
+				)) . "\n";
 		}
-
-		$added = [];
-		$entities = [...$this->collection->getEntities()];
-		foreach ($this->collection->getGroups() as $group) {
-			$entities = array_merge($entities, $group->getEntities());
-		}
-
-		foreach ($entities as $entity) {
-			if (isset($mapping[$entity->className])) {
-				unset($mapping[$entity->className]);
-
-				continue;
-			} else {
-				$added[] = $entity->className;
-			}
-		}
-
-		if (!$mapping && !$added) {
-			return "\e[34mNo changes!\e[39m\n";
-		}
-
-		$diff = '';
-		foreach ($mapping as $class => $_) {
-			$diff .= "\e[31m- " . $class . "\e[39m\n";
-		}
-
-		foreach ($added as $class) {
-			$diff .= "\e[32m+ " . $class . "\e[39m\n";
-		}
-
-		return $diff;
 	}
 
 	public function save(): void
 	{
-		file_put_contents($this->file, (new ServiceNeonGenerator($this->collection))->generate());
+		FileSystem::write($this->file, $this->content);
+	}
+
+	private function decorateLine(string $line): string
+	{
+		$char = $line[0] ?? '';
+
+		if ($char === '<') {
+			$line = "\e[31m-" . substr($line, 1) . "\e[39m";
+		} elseif ($char === '>') {
+			$line = "\e[32m+" . substr($line, 1) . "\e[39m";
+		}
+
+		return $line;
 	}
 
 }

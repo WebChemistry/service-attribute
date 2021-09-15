@@ -5,6 +5,4 @@ namespace WebChemistry\ServiceAttribute\Entity;
 interface ServiceEntityInterface
 {
 
-	public function generate(): array;
-
 }

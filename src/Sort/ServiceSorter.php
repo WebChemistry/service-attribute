@@ -31,15 +31,19 @@ final class ServiceSorter
 	 */
 	private static function sortServices(array $services): array
 	{
-		$sorted = [];
-		
-		foreach ($services as $service) {
-			$sorted[$service->className] = $service;
-		}
+		usort(
+			$services,
+			function (ServiceEntity $entity, ServiceEntity $entity1): int
+			{
+				if ($entity->attribute->priority === $entity1->attribute->priority) {
+					return strcmp($entity->className, $entity1->className);
+				}
 
-		ksort($sorted);
+				return $entity1->attribute->priority <=> $entity->attribute->priority;
+			}
+		);
 
-		return array_values($sorted);
+		return $services;
 	}
 
 }
