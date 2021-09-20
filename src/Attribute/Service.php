@@ -14,6 +14,7 @@ final class Service
 		public ?array $tags = null,
 		public string|bool|null $serviceFromMethod = null,
 		public int $priority = 0,
+		public ?string $environment = null,
 	)
 	{
 	}

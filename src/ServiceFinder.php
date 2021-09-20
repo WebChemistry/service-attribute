@@ -12,7 +12,7 @@ use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
 class ServiceFinder
 {
 
-	public static function findServices(Finder $directory): ServiceEntityCollection
+	public static function findServices(Finder $directory, ?string $environment = null): ServiceEntityCollection
 	{
 		$collection = new ServiceEntityCollection();
 		foreach (ClassFinder::findClasses($directory) as $class) {
@@ -26,6 +26,10 @@ class ServiceFinder
 
 			/** @var Service $attribute */
 			$attribute = $attributes[0]->newInstance();
+
+			if ($attribute->environment && $attribute->environment !== $environment) {
+				continue;
+			}
 
 			$collection->addEntity(
 				new ServiceEntity(
