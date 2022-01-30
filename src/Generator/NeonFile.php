@@ -2,10 +2,7 @@
 
 namespace WebChemistry\ServiceAttribute\Generator;
 
-use Nette\Neon\Entity;
-use Nette\Neon\Neon;
 use Nette\Utils\FileSystem;
-use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
 
 final class NeonFile
 {
@@ -25,7 +22,7 @@ final class NeonFile
 			return;
 		}
 
-		$res = exec(
+		exec(
 			sprintf(
 				'diff  <(echo \'%s\' ) <(echo \'%s\')',
 				file_get_contents($this->file),

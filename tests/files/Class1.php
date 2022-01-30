@@ -2,9 +2,9 @@
 
 namespace Tests\Tester;
 
-use WebChemistry\ServiceAttribute\Service;
+use WebChemistry\ServiceAttribute\Attribute\Service;
 
-#[Service(args: '%arg%')]
+#[Service(args: ['%arg%'])]
 class Class1
 {
 

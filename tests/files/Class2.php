@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use WebChemistry\ServiceAttribute\Service;
+use WebChemistry\ServiceAttribute\Attribute\Service;
 
 #[Service(name: 'class2')]
 class Class2

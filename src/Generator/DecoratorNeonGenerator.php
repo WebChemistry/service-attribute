@@ -2,10 +2,8 @@
 
 namespace WebChemistry\ServiceAttribute\Generator;
 
-use _HumbugBox39a196d4601e\Nette\Neon\Exception;
 use Nette\Neon\Neon;
 use WebChemistry\ServiceAttribute\Entity\DecoratorEntity;
-use WebChemistry\ServiceAttribute\Neon\NeonPrettyEncoder;
 
 final class DecoratorNeonGenerator
 {
@@ -26,7 +24,7 @@ final class DecoratorNeonGenerator
 			$decorators = $decorator->toArray($decorators);
 		}
 
-		return NeonPrettyEncoder::encode(['decorator' => $decorators]);
+		return $decorators ? Neon::encode(['decorator' => $decorators], true) : '';
 	}
 
 }

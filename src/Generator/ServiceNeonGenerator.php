@@ -2,11 +2,8 @@
 
 namespace WebChemistry\ServiceAttribute\Generator;
 
-use WeakMap;
+use Nette\Neon\Neon;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
-use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
-use WebChemistry\ServiceAttribute\Neon\NeonComment;
-use WebChemistry\ServiceAttribute\Neon\NeonPrettyEncoder;
 
 final class ServiceNeonGenerator
 {
@@ -14,10 +11,10 @@ final class ServiceNeonGenerator
 	private string $cache;
 
 	/**
-	 * @param ServiceEntityCollection[] $collection
+	 * @param ServiceEntity[] $collection
 	 */
 	public function __construct(
-		private ServiceEntityCollection $collection
+		private array $collection
 	)
 	{
 	}
@@ -25,38 +22,22 @@ final class ServiceNeonGenerator
 	public function generate(): string
 	{
 		if (!isset($this->cache)) {
-			$services = $this->generateFromEntities([], $this->collection->getEntities());
+			$services = [];
 
-			foreach ($this->collection->getGroups() as $group) {
-				$services[] = new NeonComment($group->getComment());
+			foreach ($this->collection as $service) {
+				if ($service->ignore) {
+					continue;
+				}
 
-				$services = $this->generateFromEntities($services, $group->getEntities());
+				$services = $service->toArray($services);
 			}
 
-			$this->cache = NeonPrettyEncoder::encode([
+			$this->cache = $services ? Neon::encode([
 				'services' => $services,
-			]);
+			], true) : '';
 		}
 
 		return $this->cache;
-	}
-
-	/**
-	 * @param mixed[] $services
-	 * @param ServiceEntity[] $entities
-	 * @return mixed[]
-	 */
-	private function generateFromEntities(array $services, array $entities): array
-	{
-		foreach ($entities as $service) {
-			if ($service->ignore) {
-				continue;
-			}
-
-			$services = $service->toArray($services);
-		}
-
-		return $services;
 	}
 
 }

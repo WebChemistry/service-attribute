@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use WebChemistry\ServiceAttribute\Service;
+use WebChemistry\ServiceAttribute\Attribute\Service;
 
 #[Service]
 interface Interface2

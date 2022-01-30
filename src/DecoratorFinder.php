@@ -4,10 +4,9 @@ namespace WebChemistry\ServiceAttribute;
 
 use Nette\Utils\Finder;
 use ReflectionClass;
+use WebChemistry\ClassFinder\ClassFinder;
 use WebChemistry\ServiceAttribute\Attribute\Decorator;
 use WebChemistry\ServiceAttribute\Entity\DecoratorEntity;
-use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
-use WebChemistry\ServiceAttribute\Entity\ServiceEntityCollection;
 
 final class DecoratorFinder
 {
@@ -18,6 +17,7 @@ final class DecoratorFinder
 	public static function findDecorators(Finder $directory): array
 	{
 		$decorators = [];
+
 		foreach (ClassFinder::findClasses($directory) as $class) {
 			$reflection = new ReflectionClass($class);
 			$attributes = $reflection->getAttributes(Decorator::class);
@@ -28,10 +28,7 @@ final class DecoratorFinder
 
 			/** @var Decorator $attribute */
 			$attribute = $attributes[0]->newInstance();
-			$decorators[$class] = new DecoratorEntity(
-				$reflection,
-				$attribute,
-			);
+			$decorators[$class] = new DecoratorEntity($reflection, $attribute);
 		}
 
 		ksort($decorators);
