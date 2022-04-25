@@ -12,7 +12,7 @@ final class Service
 		public ?string $name = null,
 		public ?array $args = null,
 		public ?array $tags = null,
-		public string|bool|null $serviceFromMethod = null,
+		public string|null $serviceFromMethod = null,
 		public int $priority = 0,
 		public ?string $environment = null,
 	)
