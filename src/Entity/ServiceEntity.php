@@ -3,8 +3,7 @@
 namespace WebChemistry\ServiceAttribute\Entity;
 
 use Exception;
-use Nette\Neon\Neon;
-use Nette\Utils\Arrays;
+use LogicException;
 use ReflectionClass;
 use WebChemistry\ServiceAttribute\Attribute\Service;
 use WebChemistry\ServiceAttribute\Neon\NeonComment;
@@ -36,7 +35,20 @@ final class ServiceEntity
 			'tags' => $this->attribute->tags,
 		]);
 
-		$services = $this->prolog($values, $services);
+		if ($method = $this->attribute->serviceFromMethod) {
+			if (!$this->reflection->hasMethod($method)) {
+				throw new LogicException(
+					sprintf('Class %s does not have method %s.', $this->reflection->getName(), $method)
+				);
+			}
+			$values['autowired'] = false;
+
+			if (!$this->name) {
+				$this->name = sprintf('_serviceFromMethod.%d', self::$counter++);
+			}
+
+			$services[] = sprintf('@%s::%s', $this->name, $method);
+		}
 
 		// factory -> implement, if needed
 		if (count($values) > 1 && isset($values['factory']) && $this->reflection->isInterface()) {
@@ -58,14 +70,12 @@ final class ServiceEntity
 			$services[] = $entity;
 		}
 
-		return $this->epilog($values, $services);
+		return $services;
 	}
 
 	private function prolog(array &$values, array $services): array
 	{
 		if ($method = $this->attribute->serviceFromMethod) {
-			$services[] = new NeonComment('Starts service from method');
-
 			if (!is_string($method)) {
 				$methods = $this->reflection->getMethods();
 				if (count($methods) !== 1) {
@@ -85,10 +95,6 @@ final class ServiceEntity
 
 	private function epilog(array &$values, array $services): array
 	{
-		if ($this->attribute->serviceFromMethod) {
-			$services[] = new NeonComment('Ends service from method');
-		}
-
 		return $services;
 	}
 
