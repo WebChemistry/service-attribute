@@ -2,10 +2,10 @@
 
 namespace Tests;
 
-use WebChemistry\ServiceAttribute\Attribute\Decorator;
+use WebChemistry\ServiceAttribute\Attribute\Service;
 
-#[Decorator(setup: ['setup'])]
-class Decorator1
+#[Service(calls: ['setup'])]
+abstract class Decorator1
 {
 
 	public function setup(): void

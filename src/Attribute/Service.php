@@ -8,13 +8,20 @@ use Attribute;
 final class Service
 {
 
+	/**
+	 * @param mixed[]|null $args
+	 * @param mixed[]|null $calls
+	 * @param array<string, mixed> $options
+	 * @param mixed[] $tags
+	 */
 	public function __construct(
 		public ?string $name = null,
 		public ?array $args = null,
-		public ?array $tags = null,
-		public string|null $serviceFromMethod = null,
-		public int $priority = 0,
-		public ?string $environment = null,
+		public ?array $calls = null,
+		public string $category = '',
+		public bool $skip = false,
+		public array $tags = [],
+		public array $options = [],
 	)
 	{
 	}
