@@ -2,13 +2,17 @@
 
 use Nette\Utils\Finder;
 use Tester\Assert;
-use WebChemistry\ServiceAttribute\Bridge\Nette\NetteServiceGenerator;
+use WebChemistry\ServiceAttribute\Generator\ServiceGenerator;
+use WebChemistry\ServiceAttribute\Output\NeonOutput;
+use WebChemistry\ServiceAttribute\Plugin\NetteServicePlugin;
 use WebChemistry\ServiceAttribute\ServiceFinder;
 
 require __DIR__ . '/../bootstrap.php';
 
-$neon = NetteServiceGenerator::generate(
+$generator = new ServiceGenerator([new NetteServicePlugin()]);
+$neon = $generator->generate(
 	ServiceFinder::findServices(Finder::findFiles('*.php')->from(__DIR__ . '/../files')),
+	new NeonOutput(),
 );
 
 Assert::same(

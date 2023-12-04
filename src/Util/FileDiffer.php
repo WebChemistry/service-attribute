@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace WebChemistry\ServiceAttribute\Generator;
+namespace WebChemistry\ServiceAttribute\Util;
 
 use Nette\Utils\FileSystem;
 
-final class NeonFile
+final class FileDiffer
 {
 
 	public function __construct(

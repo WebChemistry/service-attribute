@@ -1,33 +1,17 @@
 <?php declare(strict_types = 1);
 
-namespace WebChemistry\ServiceAttribute\Bridge\Nette;
+namespace WebChemistry\ServiceAttribute\Plugin;
 
-use Nette\Neon\Neon;
 use WebChemistry\ServiceAttribute\Entity\ServiceEntity;
 
-final class NetteServiceGenerator
+final class NetteServicePlugin implements ServicePlugin
 {
 
 	/**
-	 * @param ServiceEntity[] $services
+	 * @param mixed[] $schema
+	 * @return mixed[]|null
 	 */
-	public static function generate(array $services): ?string
-	{
-		$neon = [
-			'services' => [],
-		];
-
-		foreach ($services as $service) {
-			self::generateStructure($service, $neon);
-		}
-
-		return $neon ? Neon::encode($neon, true) : null;
-	}
-
-	/**
-	 * @param mixed[] $struct
-	 */
-	private static function generateStructure(ServiceEntity $service, array &$struct): void
+	public function process(array $schema, ServiceEntity $service): ?array
 	{
 		$values = array_filter([
 			'factory' => $service->className,
@@ -46,9 +30,9 @@ final class NetteServiceGenerator
 		if ($service->attribute->options['decorator'] ?? false) {
 			unset($values['factory']);
 
-			$struct['decorator'][$service->className] = $values;
+			$schema['decorator'][$service->className] = $values;
 
-			return;
+			return $schema;
 		}
 
 		// factory -> implement, if needed
@@ -66,10 +50,12 @@ final class NetteServiceGenerator
 		}
 
 		if ($service->name) {
-			$struct['services'][$service->name] = $entity;
+			$schema['services'][$service->name] = $entity;
 		} else {
-			$struct['services'][] = $entity;
+			$schema['services'][] = $entity;
 		}
+
+		return $schema;
 	}
 
 }
