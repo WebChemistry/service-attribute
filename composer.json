@@ -12,8 +12,8 @@
         "nette/tester": "^2.3"
     },
     "require": {
-        "php": ">= 8.0",
-        "nette/finder": "^2.5",
+        "php": ">= 8.1",
+        "nette/finder": "^2.5 || ^v3.0.0",
         "nette/neon": "^3.2",
         "webchemistry/class-finder": "^1.0"
     }
